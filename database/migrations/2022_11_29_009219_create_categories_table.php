@@ -13,13 +13,12 @@ return new class extends Migration
    */
   public function up()
   {
-    Schema::create('users', function (Blueprint $table) {
+    Schema::create('categories', function (Blueprint $table) {
       $table->id();
-      $table->string('first_name');
-      $table->string('last_name');
-      $table->string('email')->unique();
-      $table->string('password');
-      $table->rememberToken();
+      $table->string('description');
+      $table->enum('type', ['SPENDING', 'INCOME']);
+      $table->foreignId('account_id');
+      $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
       $table->timestamps();
     });
   }
@@ -31,6 +30,6 @@ return new class extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists('users');
+    Schema::dropIfExists('categories');
   }
 };
