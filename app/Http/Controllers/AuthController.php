@@ -47,7 +47,7 @@ class AuthController extends BaseController
     $user = User::where('email', $fields['email'])->first();
 
     if (!$user || !Hash::check($fields['password'], $user->password)) {
-      return $this->sendError([], 'Invalid credentials', 401);
+      return $this->sendError('Invalid credentials', [], 401);
     }
 
     $token = $user->createToken('myapptoken')->plainTextToken;
