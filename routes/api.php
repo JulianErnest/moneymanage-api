@@ -14,7 +14,13 @@ Route::post('/login', [AuthController::class, 'login']);
 // Private routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/logout', [AuthController::class, 'logout']);
+  Route::post('/account/{id}', [AccountController::class, 'store']);
+  Route::put('/account/{id}', [AccountController::class, 'update']);
+  Route::get('/account', [AccountController::class, 'index']);
+  Route::get('/account/get/{id}', [AccountController::class, 'showById']);
+  Route::get('/account/{id}', [AccountController::class, 'show']);
 });
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   return $request->user();
