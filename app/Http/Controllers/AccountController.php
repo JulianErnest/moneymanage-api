@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Account;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
 
@@ -33,16 +34,23 @@ class AccountController extends BaseController
   {
     // validation
     $request->validate([
-      'name' => 'required|string|unique:accounts,name|max:255',
+      'name' => 'required|string|unique:accounts,name,'.$id.'|max:255',
       'balance' => 'required',
       'currency' => 'required|string|max:255'
+
     ]);
     //fill
     $account = new Account;
     $account->fill($request->except(['user_id']));
     $account->user_id = $id;
+    
 
     if ($account->save()) {
+      //set user has newly created account to true
+      $user = new User;
+      $user = User::find($id);
+      $user->has_account = true;
+      $user->save();
       return $this->sendResponse($account, "Successfully created an account!");
     } else {
       return $this->sendError("Error in saving data!");

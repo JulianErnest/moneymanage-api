@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+  
   /**
    * Run the migrations.
    *
@@ -19,11 +20,11 @@ return new class extends Migration
       $table->string('last_name');
       $table->string('email')->unique();
       $table->string('password');
+      $table->boolean('has_account')->default(0);
       $table->rememberToken();
       $table->timestamps();
     });
   }
-
   /**
    * Reverse the migrations.
    *
