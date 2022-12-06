@@ -36,7 +36,7 @@ class AccountController extends BaseController
   {
     // validation
     $request->validate([
-      'name' => 'required|string|unique:accounts,name,' . $id . '|max:255',
+      'name' => 'required|string|unique:accounts,name,NULL,id,user_id,' . $id . '|max:255',
       'balance' => 'required',
       'currency' => 'required|string|max:255'
     ]);
