@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Entry extends Model
 {
-  protected $fillable = ['amount', 'type', 'description', 'account_id', 'category_id'];
-  use HasFactory;
+  use HasFactory, SoftDeletes;
+  protected $fillable = ['name', 'amount', 'type', 'description', 'date'];
+  protected $dates = ['deleted_at'];
 }

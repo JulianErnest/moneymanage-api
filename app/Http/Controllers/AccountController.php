@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\User;
+use App\Models\Category;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
 
@@ -34,16 +36,16 @@ class AccountController extends BaseController
   {
     // validation
     $request->validate([
-      'name' => 'required|string|unique:accounts,name,'.$id.'|max:255',
+      'name' => 'required|string|unique:accounts,name,' . $id . '|max:255',
       'balance' => 'required',
       'currency' => 'required|string|max:255'
-
     ]);
+
     //fill
     $account = new Account;
     $account->fill($request->except(['user_id']));
     $account->user_id = $id;
-    
+
 
     if ($account->save()) {
       //set user has newly created account to true
@@ -51,10 +53,21 @@ class AccountController extends BaseController
       $user = User::find($id);
       $user->has_account = true;
       $user->save();
+      $categories = [
+        ['description' => 'Food', 'type' => 'SPENDING', 'account_id' => $account->id, 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()],
+        ['description' => 'Transport', 'type' => 'SPENDING', 'account_id' => $account->id, 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()],
+        ['description' => 'Bills', 'type' => 'SPENDING', 'account_id' => $account->id, 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()]
+      ];
+      Category::insert($categories);
       return $this->sendResponse($account, "Successfully created an account!");
     } else {
       return $this->sendError("Error in saving data!");
     }
+  }
+
+  private function addDefaultCategories()
+  {
+    $category = new Category;
   }
 
   /**
@@ -97,10 +110,10 @@ class AccountController extends BaseController
     ]);
     //fill
     $account = Account::find($id);
-    if(!isset($account)){
+    if (!isset($account)) {
       return $this->sendError("No account found!");
     }
-    
+
     $account->fill($request->except(['user_id']));
 
     if ($account->save()) {

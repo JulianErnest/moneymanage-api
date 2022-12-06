@@ -15,6 +15,8 @@ return new class extends Migration
   {
     Schema::create('entries', function (Blueprint $table) {
       $table->id();
+      $table->string('name');
+      $table->date('date')->nullable();
       $table->decimal('amount', 9, 2);
       $table->enum('type', ['SPENDING', 'INCOME']);
       $table->string('description')->nullable();
@@ -23,6 +25,7 @@ return new class extends Migration
       $table->foreignId('category_id');
       $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 
