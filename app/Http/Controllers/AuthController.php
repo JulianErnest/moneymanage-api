@@ -57,12 +57,17 @@ class AuthController extends BaseController
       'token' => $token
     ];
 
-    return $this->sendResponse($response, 'Successfully logged in');
+    return $this->sendResponse($response, 'Welcome back, ' . $user['first_name'] . '!');
+  }
+
+  public function getUserDetails(Request $request)
+  {
+    return $this->sendResponse($request->user(), '');
   }
 
   public function logout(Request $request)
   {
     $request->user()->currentAccessToken()->delete();
-    return $this->sendResponse([], 'Successfully logged out.');
+    return $this->sendResponse([], 'Come back soon :(');
   }
 }
