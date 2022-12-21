@@ -89,7 +89,7 @@ class AccountController extends BaseController
   public function showById($id)
   {
     $account = Account::find($id);
-
+    
     if (isset($account)) {
       return $this->sendResponse($account, "Successfully retrieved data");
     }
@@ -103,13 +103,14 @@ class AccountController extends BaseController
    */
   public function update(Request $request, $id)
   {
+
     $request->validate([
-      'name' => 'required|string|unique:accounts,name|max:255',
-      'balance' => 'required',
-      'currency' => 'required|string|max:255'
+      'name' => 'required|string|max:255',
+      'balance' => 'required'
     ]);
-    //fill
+    
     $account = Account::find($id);
+    $account["balance"] = $request['amount'];
     if (!isset($account)) {
       return $this->sendError("No account found!");
     }
@@ -117,7 +118,7 @@ class AccountController extends BaseController
     $account->fill($request->except(['user_id']));
 
     if ($account->save()) {
-      return $this->sendResponse($account, "Successfully created an account!");
+      return $this->sendResponse($account, "Successfully updated an account!");
     } else {
       return $this->sendError("Error in saving data!");
     }
